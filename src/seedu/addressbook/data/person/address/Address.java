@@ -1,6 +1,8 @@
-package seedu.addressbook.data.person;
+package seedu.addressbook.data.person.address;
 
 import seedu.addressbook.data.exception.IllegalValueException;
+import seedu.addressbook.data.person.address.subfield.Block;
+
 
 /**
  * Represents a Person's address in the address book.
