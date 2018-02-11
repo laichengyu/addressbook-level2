@@ -2,7 +2,9 @@ package seedu.addressbook.data.person.address;
 
 import seedu.addressbook.data.exception.IllegalValueException;
 import seedu.addressbook.data.person.address.subfield.Block;
-
+import seedu.addressbook.data.person.address.subfield.PostalCode;
+import seedu.addressbook.data.person.address.subfield.Street;
+import seedu.addressbook.data.person.address.subfield.Unit;
 
 /**
  * Represents a Person's address in the address book.
@@ -10,10 +12,19 @@ import seedu.addressbook.data.person.address.subfield.Block;
  */
 public class Address {
 
-    public static final String EXAMPLE = "123, some street";
-    public static final String MESSAGE_ADDRESS_CONSTRAINTS = "Person addresses can be in any format";
-    public static final String ADDRESS_VALIDATION_REGEX = ".+";
+    public static final String EXAMPLE = "123, Clementi Ave 3, #12-34, 231534";
+    public static final String MESSAGE_ADDRESS_CONSTRAINTS = "Person addresses must be in the format 'BLOCK, STREET, UNIT, POSTAL_CODE'";
+    public static final String ADDRESS_VALIDATION_REGEX = ".+,.+,.+,.+";
+    public static final int ADDRESS_INDEX_BLOCK = 0;
+    public static final int ADDRESS_INDEX_STREET = 1;
+    public static final int ADDRESS_INDEX_UNIT = 2;
+    public static final int ADDRESS_INDEX_POSTAL_CODE = 3;
 
+    private final Block block;
+    private final Street street;
+    private final Unit unit;
+    private final PostalCode postalCode;
+    
     public final String value;
     private boolean isPrivate;
 
@@ -28,7 +39,19 @@ public class Address {
         if (!isValidAddress(trimmedAddress)) {
             throw new IllegalValueException(MESSAGE_ADDRESS_CONSTRAINTS);
         }
+        String[] components = getAddressComponents(trimmedAddress);
+        this.block = new Block(components[ADDRESS_INDEX_BLOCK]);
+        this.street = new Street(components[ADDRESS_INDEX_STREET]);
+        this.unit = new Unit(components[ADDRESS_INDEX_UNIT]);
+        this.postalCode = new PostalCode(components[ADDRESS_INDEX_POSTAL_CODE]);
         this.value = trimmedAddress;
+    }
+
+    /**
+     * Splits a trimmed address into its components: Block, Street, Unit, Postal Code in that order.
+     */
+    public String[] getAddressComponents(String address) { 
+        return address.split("\\s*,\\s*");
     }
 
     /**
