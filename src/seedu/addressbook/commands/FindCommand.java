@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import seedu.addressbook.data.person.ReadOnlyPerson;
 
@@ -49,12 +50,24 @@ public class FindCommand extends Command {
     private List<ReadOnlyPerson> getPersonsWithNameContainingAnyKeyword(Set<String> keywords) {
         final List<ReadOnlyPerson> matchedPersons = new ArrayList<>();
         for (ReadOnlyPerson person : addressBook.getAllPersons()) {
-            final Set<String> wordsInName = new HashSet<>(person.getName().getWordsInName());
-            if (!Collections.disjoint(wordsInName, keywords)) {
+            Set<String> wordsInName = new HashSet<>(person.getName().getWordsInName());
+            final Set<String> wordsInNameLowerCase = convertToLowerCase(wordsInName);
+            final Set<String> keywordsLowerCase = convertToLowerCase(keywords);
+            if (!Collections.disjoint(wordsInNameLowerCase, keywordsLowerCase)) {
                 matchedPersons.add(person);
             }
         }
         return matchedPersons;
+    }
+
+    /**
+     * Converts a set of strings to all lower case only.
+     *
+     * @param strings set
+     * @return set of strings converted to lower case
+     */
+    private Set<String> convertToLowerCase(Set<String> strings) {
+        return strings.stream().map(String::toLowerCase).collect(Collectors.toSet());
     }
 
 }
